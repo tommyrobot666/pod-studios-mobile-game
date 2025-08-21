@@ -1,11 +1,7 @@
 extends Node
-class_name GenerationLocation
+class_name FeatureLocation
 
 @export var delete_offscreen = false
-
-func _process(delta: float) -> void:
-	if delete_offscreen:
-		pass
 
 func save_all_chunks():
 	pass

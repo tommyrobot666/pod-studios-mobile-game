@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://pjmsvh0g32cc"]
 
-[ext_resource type="Script" uid="uid://cioij2ujr2dqp" path="res://world-generator/world_generation.gd" id="1_u52ul"]
-[ext_resource type="Script" uid="uid://dxbvjyt5ttin8" path="res://camera_3d.gd" id="2_vonw3"]
+[ext_resource type="Script" uid="uid://cioij2ujr2dqp" path="res://world-generator/core/world_generation.gd" id="1_u52ul"]
+[ext_resource type="Script" uid="uid://dxbvjyt5ttin8" path="res://debug/camera_3d.gd" id="2_vonw3"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_vonw3"]
 noise_type = 3
