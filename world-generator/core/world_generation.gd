@@ -1,20 +1,19 @@
 extends MeshInstance3D
 class_name WorldGeneration
 #to use this class, extend it and...
-#override _get_mesh_height_at,_get_mesh_color_at
+#override get_mesh_height_at,get_mesh_color_at
 #add entries to chunk_generators
+#call create_mesh, pre_generate_chunks, and move_to_camera
 
 const CHUNK_SIZE = 500
 @export_group("debug")
-@export var noise = FastNoiseLite.new()
+@export var what_noise_looks_like = FastNoiseLite.new()
 
 var seed = 0
 var generated_chunks = []
 var chunk_generators:Array[ChunkGeneratorsEntry]
 
 func _ready() -> void:
-	pre_generate_chunks(-1,-1,1,1)
-	create_mesh(100,200)
 	material_override = preload("res://world-generator/core/new_standard_material_3d.tres")
 
 func pre_generate_chunks(x1,y1,x2,y2):
@@ -36,7 +35,7 @@ func create_chunk_node(x:int,y:int,feature_location:FeatureLocation):
 func generate_chunk(x:int,y:int,seed:int):
 	for chunk_generator in chunk_generators:
 		var chunk_node = create_chunk_node(x,y,chunk_generator.feature_location)
-		var placements:Array[ChunkGeneratorPlacement] = chunk_generator.generator.call(seed,Vector2i(x,y))
+		var placements:Array[ChunkGeneratorPlacement] = chunk_generator.generator.call(seed,Vector2i(x,y),null)
 		for placement in placements:
 			var new_instance = chunk_generator.instance_scenes[placement.variant].instantiate()
 			new_instance.position = placement.position
@@ -58,7 +57,7 @@ func create_mesh(size:int,detail:int):
 	var segment_len:float = size as float/detail
 	for row in range(detail):
 		for column in range(detail):
-			verts.append(Vector3(segment_len*row - segment_len*row/2,0,segment_len*column - segment_len*column/2))
+			verts.append(Vector3(segment_len*row - segment_len*detail/2,0,segment_len*column - segment_len*detail/2))
 			colors.append(Color.WHITE)
 			#normals.append(Vector3.UP)
 			normals.append((verts[verts.size()-1] as Vector3).normalized())
@@ -92,17 +91,30 @@ func update_mesh():
 	data_tool.create_from_surface(mesh,0)
 	for i in range(data_tool.get_vertex_count()):
 		var vertex:Vector3 = data_tool.get_vertex(i)
-		var pos = Vector2(position.x + vertex.x, position.y + vertex.y)
+		var pos = Vector2(position.x + vertex.x, position.z + vertex.z)
 		var chunk_pos = Vector2i(pos.floor()/CHUNK_SIZE)
 		var pos_in_chunk = Vector2(fmod(pos.x,CHUNK_SIZE),fmod(pos.y,CHUNK_SIZE))
-		vertex.y = _get_mesh_height_at(chunk_pos,pos_in_chunk)
-		data_tool.set_vertex_color(i,_get_mesh_color_at(vertex.y,chunk_pos,pos_in_chunk))
+		vertex.y = get_mesh_height_at(chunk_pos,pos_in_chunk)
+		data_tool.set_vertex_color(i,get_mesh_color_at(vertex.y,chunk_pos,pos_in_chunk))
 		data_tool.set_vertex(i,vertex)
 	(mesh as ArrayMesh).clear_surfaces()
 	data_tool.commit_to_surface(mesh,0)
 
-func _get_mesh_height_at(chunk_pos:Vector2i,pos_in_chunk:Vector2) -> float:
+static func create_noise(noise_type:FastNoiseLite.NoiseType,fractal_type:FastNoiseLite.FractalType,zoom,noise_on_noise,noise_on_noise_loss,celluler_return_type:FastNoiseLite.CellularReturnType=0) -> FastNoiseLite:
+	var noise = FastNoiseLite.new()
+	noise.frequency = zoom
+	noise.fractal_octaves = noise_on_noise
+	noise.fractal_gain = noise_on_noise_loss
+	noise.fractal_type = fractal_type
+	noise.noise_type = noise_type
+	if noise_type == FastNoiseLite.TYPE_CELLULAR:
+		noise.cellular_return_type = celluler_return_type
+	return noise
+
+
+
+func get_mesh_height_at(chunk_pos:Vector2i,pos_in_chunk:Vector2) -> float:
 	return 0
 
-func _get_mesh_color_at(height:float,chunk_pos:Vector2i,pos_in_chunk:Vector2) -> Color:
+func get_mesh_color_at(height:float,chunk_pos:Vector2i,pos_in_chunk:Vector2) -> Color:
 	return Color.WHITE
