@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cg4mwi3aiht2j"]
+
+[ext_resource type="Script" uid="uid://yw44qpnwqoam" path="res://Scripts/player.gd" id="1_cvnsp"]
+[ext_resource type="PackedScene" uid="uid://oebj0q2hndqq" path="res://Assets/Character Assets/character-female-b.glb" id="1_v0iea"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
+radius = 0.343576
+height = 1.87218
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_cvnsp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.911392, 0)
+shape = SubResource("CapsuleShape3D_cvnsp")
+debug_color = Color(0.996078, 0, 0, 0.419608)
+
+[node name="character-female-b2" parent="." instance=ExtResource("1_v0iea")]
+transform = Transform3D(-2.7, 0, 2.36042e-07, 0, 2.7, 0, -2.36042e-07, 0, -2.7, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="character-female-b2"]
+transform = Transform3D(-0.37037, 1.25306e-08, -2.98559e-08, 5.26328e-15, 0.341511, 0.143334, 3.23788e-08, 0.143334, -0.341511, -1.72727e-07, 1.25467, -1.97576)
