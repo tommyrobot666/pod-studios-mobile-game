@@ -15,7 +15,7 @@ var chunk_generators:Array[ChunkGeneratorsEntry]
 var mesh_size_chunks:Vector2i
 var position_as_chunk:Vector2i:
 	get():
-		return Vector2i(floori(position.x),floori(position.z))
+		return Vector2i(floori(position.x/CHUNK_SIZE),floori(position.z/CHUNK_SIZE))
 var mesh_detail:int
 
 func _ready() -> void:
@@ -64,19 +64,18 @@ func create_mesh(size_chunks:int,detail:int):
 		for column in range(detail):
 			verts.append(Vector3(segment_len*row,0,segment_len*column))
 			colors.append(Color.WHITE)
-			#normals.append(Vector3.UP)
-			normals.append((verts[verts.size()-1] as Vector3).normalized())
+			normals.append(Vector3.UP)
 			uvs.append(Vector2(row as float/detail,column as float/detail))
 			
-			if row < detail-2:
+			if row < detail-1 and column < detail-1:
 				var first_point = row*detail + column
 				indices.append(first_point)
-				indices.append(first_point+1)
 				indices.append(first_point+detail)
-				
-				indices.append(first_point+1)
 				indices.append(first_point+detail+1)
+				
 				indices.append(first_point+detail)
+				indices.append(first_point+detail+1)
+				indices.append(first_point+1)
 	
 	surface_array[Mesh.ARRAY_VERTEX] = verts
 	surface_array[Mesh.ARRAY_TEX_UV] = uvs
@@ -90,9 +89,9 @@ func create_mesh(size_chunks:int,detail:int):
 
 func move_to_camera():
 	var cam:Camera3D = get_tree().root.get_camera_3d()
-	global_position = (cam.global_position/CHUNK_SIZE).floor() - Vector3(mesh_size_chunks.x,0,mesh_size_chunks.y)*CHUNK_SIZE/2
+	global_position = ((cam.global_position/CHUNK_SIZE).floor() * CHUNK_SIZE) - (Vector3(mesh_size_chunks.x,0,mesh_size_chunks.y)*CHUNK_SIZE/2)
 	global_position.y = 0
-	update_mesh()
+	#update_mesh()
 
 func update_mesh():
 	var heights = get_mesh_heights_at(Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail)
@@ -101,8 +100,9 @@ func update_mesh():
 	var colors_image = Image.create_from_data(mesh_detail,mesh_detail,false,Image.Format.FORMAT_RGBAF,\
 	get_mesh_colors_at(heights,Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail).to_byte_array())
 	
-	material_override.set("shader_parameter/vertex_colors",colors_image)
-	material_override.set("shader_parameter/vertex_heights",heights_image)
+	material_override.set("shader_parameter/vertex_colors",ImageTexture.create_from_image(colors_image))
+	material_override.set("shader_parameter/vertex_heights",ImageTexture.create_from_image(heights_image))
+	material_override.set("shader_parameter/mesh_detail",mesh_detail)
 
 static func create_noise(noise_type:FastNoiseLite.NoiseType,fractal_type:FastNoiseLite.FractalType,zoom,noise_on_noise,noise_on_noise_loss,celluler_return_type:FastNoiseLite.CellularReturnType=0) -> FastNoiseLite:
 	var noise = FastNoiseLite.new()

@@ -16,7 +16,7 @@ material_override = ExtResource("1_oi3di")
 script = ExtResource("1_vonw3")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 18.68, 27.9)
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 100, 0)
 script = ExtResource("2_vonw3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -27,3 +27,6 @@ mesh = SubResource("SphereMesh_oi3di")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

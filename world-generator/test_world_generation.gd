@@ -1,13 +1,14 @@
 extends WorldGeneration
 
-@export var max_camera_dist:float = 1000:
+@export var max_camera_dist:float = 100000000:
 	set(x):
 		max_camera_dist = x*x
 var noise = create_noise(FastNoiseLite.NoiseType.TYPE_SIMPLEX_SMOOTH,FastNoiseLite.FractalType.FRACTAL_FBM,0.005,3,0.5)
 
 func _ready() -> void:
 	pre_generate_chunks(-1,-1,1,1)
-	create_mesh(1,200)
+	create_mesh(2,200)
+	move_to_camera()
 	update_mesh()
 
 func _process(delta: float) -> void:
