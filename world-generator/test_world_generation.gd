@@ -18,7 +18,6 @@ func _process(delta: float) -> void:
 
 func get_mesh_heights_at(chunks:Rect2i,detail:int) -> PackedFloat32Array:
 	var heights = PackedFloat32Array()
-	#heights.resize(detail*detail)
 	noise.seed = seed
 	var segment_len:float = CHUNK_SIZE/detail
 	var offset:Vector2 = chunks.position*CHUNK_SIZE
@@ -31,11 +30,16 @@ func get_mesh_heights_at(chunks:Rect2i,detail:int) -> PackedFloat32Array:
 
 func get_mesh_colors_at(heights:PackedFloat32Array,chunks:Rect2i,detail:int) -> PackedColorArray:
 	var colors = PackedColorArray()
-	#colors.resize(detail*detail)
 	for i in range(heights.size()):
 		var height = heights[i]
 		if height > 0:
-			colors.append(Color.RED)
+			if height > 20:
+				colors.append(Color.RED)
+			else:
+				colors.append(Color.YELLOW)
 		else:
-			colors.append(Color.BLUE)
+			if height < -20:
+				colors.append(Color.BLUE)
+			else:
+				colors.append(Color.GREEN)
 	return colors

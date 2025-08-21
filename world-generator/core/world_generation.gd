@@ -17,6 +17,7 @@ var position_as_chunk:Vector2i:
 	get():
 		return Vector2i(floori(position.x/CHUNK_SIZE),floori(position.z/CHUNK_SIZE))
 var mesh_detail:int
+var point_heights
 
 func _ready() -> void:
 	material_override = preload("res://world-generator/core/new_shader_material.tres")
@@ -94,11 +95,11 @@ func move_to_camera():
 	#update_mesh()
 
 func update_mesh():
-	var heights = get_mesh_heights_at(Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail)
+	point_heights = get_mesh_heights_at(Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail)
 	var heights_image = Image.create_from_data(mesh_detail,mesh_detail,false,Image.Format.FORMAT_RF,\
-	heights.to_byte_array())
+	point_heights.to_byte_array())
 	var colors_image = Image.create_from_data(mesh_detail,mesh_detail,false,Image.Format.FORMAT_RGBAF,\
-	get_mesh_colors_at(heights,Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail).to_byte_array())
+	get_mesh_colors_at(point_heights,Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail).to_byte_array())
 	
 	material_override.set("shader_parameter/vertex_colors",ImageTexture.create_from_image(colors_image))
 	material_override.set("shader_parameter/vertex_heights",ImageTexture.create_from_image(heights_image))
