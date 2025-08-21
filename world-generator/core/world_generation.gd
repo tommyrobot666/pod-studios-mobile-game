@@ -73,7 +73,7 @@ func create_mesh(size_chunks:int,detail:int):
 				indices.append(first_point+detail)
 				indices.append(first_point+detail+1)
 				
-				indices.append(first_point+detail)
+				indices.append(first_point)
 				indices.append(first_point+detail+1)
 				indices.append(first_point+1)
 	
