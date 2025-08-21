@@ -39,9 +39,17 @@ func create_chunk_node(x:int,y:int,feature_location:FeatureLocation):
 	return chunk_node
 
 func generate_chunk(x:int,y:int,seed:int):
+	var heights_of_this_chunk = get_mesh_heights_at(Rect2i(Vector2i(x,y),Vector2.ONE),mesh_detail)
+	var get_mesh_height_at:Callable = func(pos:Vector2): 
+		var array_pos := Vector2i(
+		floor(pos.x / CHUNK_SIZE * mesh_detail),
+		floor(pos.y / CHUNK_SIZE * mesh_detail))
+		return heights_of_this_chunk[array_pos.y + array_pos.x*mesh_detail]
+	
 	for chunk_generator in chunk_generators:
 		var chunk_node = create_chunk_node(x,y,chunk_generator.feature_location)
-		var placements:Array[ChunkGeneratorPlacement] = chunk_generator.generator.call(seed,Vector2i(x,y),null)
+		var placements:Array[ChunkGeneratorPlacement] = chunk_generator.generator.call(seed,Vector2i(x,y),\
+		get_mesh_height_at)
 		for placement in placements:
 			var new_instance = chunk_generator.instance_scenes[placement.variant].instantiate()
 			new_instance.position = placement.position
@@ -92,7 +100,7 @@ func move_to_camera():
 	var cam:Camera3D = get_tree().root.get_camera_3d()
 	global_position = ((cam.global_position/CHUNK_SIZE).floor() * CHUNK_SIZE) - (Vector3(mesh_size_chunks.x,0,mesh_size_chunks.y)*CHUNK_SIZE/2)
 	global_position.y = 0
-	#update_mesh()
+	update_mesh()
 
 func update_mesh():
 	point_heights = get_mesh_heights_at(Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail)
@@ -116,6 +124,9 @@ static func create_noise(noise_type:FastNoiseLite.NoiseType,fractal_type:FastNoi
 		noise.cellular_return_type = celluler_return_type
 	return noise
 
+
+func add_chunk_generator(entry:ChunkGeneratorsEntry):
+	chunk_generators.append(entry)
 
 
 func get_mesh_heights_at(chunks:Rect2i,detail:int) -> PackedFloat32Array:

@@ -1,7 +1,7 @@
 extends RefCounted
 class_name ChunkGeneratorsEntry
 
-var generator:Callable #func(seed:int,chunk_pos:Vector2i,get_mesh_height_at:Callable) -> Array[ChunkGeneratorOutput]
+var generator:Callable #func(seed:int,chunk_pos:Vector2i,get_mesh_height_at:Callable[func(Vector2) -> float]) -> Array[ChunkGeneratorPlacement]
 var instance_scenes:Array[PackedScene] #different varients, like rotations or colors
 var feature_location:FeatureLocation #the node that the generated chunks will be childs of
 

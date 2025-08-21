@@ -1,17 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://pjmsvh0g32cc"]
+[gd_scene load_steps=6 format=3 uid="uid://pjmsvh0g32cc"]
 
 [ext_resource type="Material" uid="uid://byn1qr0hjkpio" path="res://world-generator/core/new_shader_material.tres" id="1_oi3di"]
 [ext_resource type="Script" uid="uid://dgyk0e48hj6e7" path="res://world-generator/test_world_generation.gd" id="1_vonw3"]
 [ext_resource type="Script" uid="uid://dxbvjyt5ttin8" path="res://debug/camera_3d.gd" id="2_vonw3"]
+[ext_resource type="Script" uid="uid://c6kqnhuytwbqd" path="res://world-generator/core/feature_location.gd" id="4_0b4ue"]
 
 [sub_resource type="Environment" id="Environment_oi3di"]
 ambient_light_color = Color(1, 1, 1, 1)
 
 [node name="Level" type="Node3D"]
 
-[node name="WorldGeneration" type="MeshInstance3D" parent="."]
+[node name="WorldGeneration" type="MeshInstance3D" parent="." node_paths=PackedStringArray("grass_feature_location")]
 material_override = ExtResource("1_oi3di")
 script = ExtResource("1_vonw3")
+grass_feature_location = NodePath("../GrassFeatureLocation")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 100, 0)
@@ -22,3 +24,7 @@ environment = SubResource("Environment_oi3di")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.258819, 0.965926, 0, -0.965926, -0.258819, 0, 0, 0)
+
+[node name="GrassFeatureLocation" type="Node" parent="."]
+script = ExtResource("4_0b4ue")
+metadata/_custom_type_script = "uid://c6kqnhuytwbqd"
