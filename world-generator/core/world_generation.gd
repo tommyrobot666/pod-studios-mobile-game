@@ -1,20 +1,25 @@
 extends MeshInstance3D
 class_name WorldGeneration
 #to use this class, extend it and...
-#override get_mesh_height_at,get_mesh_color_at
+#override get_mesh_heights_at,get_mesh_colors_at
 #add entries to chunk_generators
 #call create_mesh, pre_generate_chunks, and move_to_camera
 
-const CHUNK_SIZE = 500
+const CHUNK_SIZE:float = 500
 @export_group("debug")
 @export var what_noise_looks_like = FastNoiseLite.new()
 
 var seed = 0
 var generated_chunks = []
 var chunk_generators:Array[ChunkGeneratorsEntry]
+var mesh_size_chunks:Vector2i
+var position_as_chunk:Vector2i:
+	get():
+		return Vector2i(floori(position.x),floori(position.z))
+var mesh_detail:int
 
 func _ready() -> void:
-	material_override = preload("res://world-generator/core/new_standard_material_3d.tres")
+	material_override = preload("res://world-generator/core/new_shader_material.tres")
 
 func pre_generate_chunks(x1,y1,x2,y2):
 	var pos = null
@@ -43,7 +48,7 @@ func generate_chunk(x:int,y:int,seed:int):
 	
 	generated_chunks.append(Vector2(x,y))
 
-func create_mesh(size:int,detail:int):
+func create_mesh(size_chunks:int,detail:int):
 	mesh = ArrayMesh.new()
 	
 	var surface_array = []
@@ -54,10 +59,10 @@ func create_mesh(size:int,detail:int):
 	var indices = PackedInt32Array()
 	var colors = PackedColorArray()
 	
-	var segment_len:float = size as float/detail
+	var segment_len:float = size_chunks as float/detail * CHUNK_SIZE
 	for row in range(detail):
 		for column in range(detail):
-			verts.append(Vector3(segment_len*row - segment_len*detail/2,0,segment_len*column - segment_len*detail/2))
+			verts.append(Vector3(segment_len*row,0,segment_len*column))
 			colors.append(Color.WHITE)
 			#normals.append(Vector3.UP)
 			normals.append((verts[verts.size()-1] as Vector3).normalized())
@@ -79,26 +84,25 @@ func create_mesh(size:int,detail:int):
 	surface_array[Mesh.ARRAY_INDEX] = indices
 	surface_array[Mesh.ARRAY_COLOR] = colors
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, surface_array)
+	
+	mesh_size_chunks = Vector2i(size_chunks,size_chunks)
+	mesh_detail = detail
 
 func move_to_camera():
 	var cam:Camera3D = get_tree().root.get_camera_3d()
-	global_position = cam.global_position
+	global_position = (cam.global_position/CHUNK_SIZE).floor() - Vector3(mesh_size_chunks.x,0,mesh_size_chunks.y)*CHUNK_SIZE/2
 	global_position.y = 0
 	update_mesh()
 
 func update_mesh():
-	var data_tool = MeshDataTool.new()
-	data_tool.create_from_surface(mesh,0)
-	for i in range(data_tool.get_vertex_count()):
-		var vertex:Vector3 = data_tool.get_vertex(i)
-		var pos = Vector2(position.x + vertex.x, position.z + vertex.z)
-		var chunk_pos = Vector2i(pos.floor()/CHUNK_SIZE)
-		var pos_in_chunk = Vector2(fmod(pos.x,CHUNK_SIZE),fmod(pos.y,CHUNK_SIZE))
-		vertex.y = get_mesh_height_at(chunk_pos,pos_in_chunk)
-		data_tool.set_vertex_color(i,get_mesh_color_at(vertex.y,chunk_pos,pos_in_chunk))
-		data_tool.set_vertex(i,vertex)
-	(mesh as ArrayMesh).clear_surfaces()
-	data_tool.commit_to_surface(mesh,0)
+	var heights = get_mesh_heights_at(Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail)
+	var heights_image = Image.create_from_data(mesh_detail,mesh_detail,false,Image.Format.FORMAT_RF,\
+	heights.to_byte_array())
+	var colors_image = Image.create_from_data(mesh_detail,mesh_detail,false,Image.Format.FORMAT_RGBAF,\
+	get_mesh_colors_at(heights,Rect2i(position_as_chunk,mesh_size_chunks),mesh_detail).to_byte_array())
+	
+	material_override.set("shader_parameter/vertex_colors",colors_image)
+	material_override.set("shader_parameter/vertex_heights",heights_image)
 
 static func create_noise(noise_type:FastNoiseLite.NoiseType,fractal_type:FastNoiseLite.FractalType,zoom,noise_on_noise,noise_on_noise_loss,celluler_return_type:FastNoiseLite.CellularReturnType=0) -> FastNoiseLite:
 	var noise = FastNoiseLite.new()
@@ -113,8 +117,12 @@ static func create_noise(noise_type:FastNoiseLite.NoiseType,fractal_type:FastNoi
 
 
 
-func get_mesh_height_at(chunk_pos:Vector2i,pos_in_chunk:Vector2) -> float:
-	return 0
+func get_mesh_heights_at(chunks:Rect2i,detail:int) -> PackedFloat32Array:
+	var heights = PackedFloat32Array()
+	heights.resize(detail*detail)
+	return heights
 
-func get_mesh_color_at(height:float,chunk_pos:Vector2i,pos_in_chunk:Vector2) -> Color:
-	return Color.WHITE
+func get_mesh_colors_at(heights:PackedFloat32Array,chunks:Rect2i,detail:int) -> PackedColorArray:
+	var colors = PackedColorArray()
+	colors.resize(detail*detail)
+	return colors

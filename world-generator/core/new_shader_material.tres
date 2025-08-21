@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://byn1qr0hjkpio"]
+
+[ext_resource type="Shader" uid="uid://cc10v1sulupj4" path="res://world-generator/core/apply_heights_and_colors.gdshader" id="1_ksjyf"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ksjyf")

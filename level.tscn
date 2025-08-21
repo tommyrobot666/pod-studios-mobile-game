@@ -1,16 +1,29 @@
-[gd_scene load_steps=3 format=3 uid="uid://pjmsvh0g32cc"]
+[gd_scene load_steps=6 format=3 uid="uid://pjmsvh0g32cc"]
 
+[ext_resource type="Material" uid="uid://byn1qr0hjkpio" path="res://world-generator/core/new_shader_material.tres" id="1_oi3di"]
 [ext_resource type="Script" uid="uid://dgyk0e48hj6e7" path="res://world-generator/test_world_generation.gd" id="1_vonw3"]
 [ext_resource type="Script" uid="uid://dxbvjyt5ttin8" path="res://debug/camera_3d.gd" id="2_vonw3"]
+
+[sub_resource type="Environment" id="Environment_oi3di"]
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_oi3di"]
 
 [node name="Level" type="Node3D"]
 
 [node name="WorldGeneration" type="MeshInstance3D" parent="."]
+material_override = ExtResource("1_oi3di")
 script = ExtResource("1_vonw3")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 18.68, 27.9)
 script = ExtResource("2_vonw3")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_oi3di")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_oi3di")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.526721, 0.0105808, -0.849972, 0.767724, 0.42334, 0.481022, 0.364917, -0.905909, 0.214859, -148.831, 149.018, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
