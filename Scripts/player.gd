@@ -3,18 +3,30 @@ extends CharacterBody3D
 @export var mouse_sensitivity = 0.5
 var camera_rotation = Vector3()
 
-@onready var head = $Camera3D 
+@onready var third_camera_3d: Camera3D = $ThirdCamera3D
+@onready var first_camera_3d: Camera3D = $FirstCamera3D
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED) 
+	third_camera_3d.make_current()
 
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		rotation_degrees.y -= event.relative.x * 0.5
+		rotation_degrees.x -= event.relative.y * 0.25
 		
 	elif event.is_action_pressed("ui_cancel"): 
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE) 
+		
+	elif event.is_action_pressed("toggle_perspective") and not event.is_echo():
+		match get_viewport().get_camera_3d():
+			third_camera_3d:
+				first_camera_3d.make_current()
+			first_camera_3d:
+				third_camera_3d.make_current()
+			_:
+				print("unexpected camera")
 
 
 func _physics_process(delta):
