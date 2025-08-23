@@ -4,7 +4,7 @@ class_name WaveFunctionCollapse2D
 var tiles:Array[int] # last bit 1 means "filled", for others 1 means "not that state"
 @export var rules:Array[TileRuleset] # rules is also tile types
 var width:int
-var random:RandomNumberGenerator
+var random:RandomNumberGenerator = RandomNumberGenerator.new()
 
 # false means constraints satisfied
 func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
@@ -25,6 +25,7 @@ func solve_tile(tile_pos:Vector2i) -> bool:
 			if tile & (~tile)-1: # only one bit is 0
 				tile += (2 ** rules.size())
 				something_changed = true
+	tiles[point_to_index(tile_pos)] = tile
 	return something_changed
 
 func get_random_state(tile:int) -> int:
@@ -43,8 +44,9 @@ func get_random_state(tile:int) -> int:
 		total += rules[rule_idx].weight
 		if total > value:
 			chossen_state = rule_idx
+			break
 	
-	return (2 ** chossen_state) + (2 ** rules.size())
+	return filled_tile_value_for(chossen_state)
 
 func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 	var total_rules_weights:float = 0
@@ -59,7 +61,7 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 		var idx = point_to_index(start_pos)
 		tiles[idx] = get_random_state(tiles[idx])
 	else:
-		tiles[point_to_index(start_pos)] = (2 ** first_state) + (2 ** rules.size())
+		tiles[point_to_index(start_pos)] = filled_tile_value_for(first_state)
 	
 	
 	var something_changed:bool
@@ -68,7 +70,6 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 		for i in range(stack.size()):
 			if solve_tile(stack[i]):
 				something_changed = true
-		stack = get_unfilled_tiles(stack)
 		
 		if not something_changed:
 			var entropys:Array[float] = []
@@ -80,8 +81,8 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 						var chance = rules_chances[rule_idx]
 						entropy -= chance*log(chance)
 				entropys.append(entropy)
-			var min_entropy:float = 0
-			var min_entropy_idx:float = 0
+			var min_entropy:float = INF
+			var min_entropy_idx:int = 0
 			for i in range(stack.size()):
 				var entropy:float = entropys[i]
 				if entropy < min_entropy:
@@ -89,14 +90,19 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 					min_entropy_idx = i
 			
 			tiles[point_to_index(stack[min_entropy_idx])] = get_random_state(tiles[point_to_index(stack[min_entropy_idx])])
-			stack.append_array(get_unfilled_tiles(get_nearby_tiles_pos(stack[min_entropy_idx])))
+			stack.append_array(get_nearby_tiles_pos(stack[min_entropy_idx]))
+		
+		for tile_pos in get_filled_tiles(stack):
+			stack.append_array((get_nearby_tiles_pos(tile_pos)))
+		stack = get_unfilled_tiles(stack)
+		something_changed = false
 
 func point_to_index(point:Vector2i) -> int:
 	return point.x + point.y*width
 
 func get_nearby_tiles(tile_pos:Vector2i) -> Array[int]:
 	var output:Array[int] = []
-	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.LEFT]:
+	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.RIGHT]:
 		var point = tile_pos + dir
 		var pos = point_to_index(point)
 		if tiles.size() > pos and point.x > 0 and point.y > 0:
@@ -107,7 +113,7 @@ func get_nearby_tiles(tile_pos:Vector2i) -> Array[int]:
 
 func get_nearby_tiles_pos(tile_pos:Vector2i) -> Array[Vector2i]:
 	var output:Array[Vector2i] = []
-	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.LEFT]:
+	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.RIGHT]:
 		var point = tile_pos + dir
 		if is_point_in_tiles(point):
 			output.append(point)
@@ -115,7 +121,7 @@ func get_nearby_tiles_pos(tile_pos:Vector2i) -> Array[Vector2i]:
 
 func is_point_in_tiles(tile_pos:Vector2i):
 	var idx = point_to_index(tile_pos)
-	return tiles.size() > idx and not (tile_pos.x < 0 and tile_pos.y < 0)
+	return tiles.size() > idx and tile_pos.x >= 0 and tile_pos.y >= 0
 
 func clear_tiles(new_size:Vector2i) -> void:
 	tiles.clear()
@@ -124,13 +130,16 @@ func clear_tiles(new_size:Vector2i) -> void:
 		tiles.append(0)
 
 func get_filled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): x & 2 ** rules.size())
+	return tile_poses.filter(func(x): tiles[point_to_index(x)] & 2 ** rules.size())
 
 func get_unfilled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): not (x & 2 ** rules.size()))
+	return tile_poses.filter(func(x): not (tiles[point_to_index(x)] & 2 ** rules.size()))
 
 func get_filled_tile_value(tile:int) -> int:
 	return log(tile-(2 ** rules.size()))/log(2)
+
+func filled_tile_value_for(rule_idx:int):
+	return (~(2 ** rules.size()) - (2 ** rule_idx)) + (2 ** rules.size())
 
 func to_image() -> Image:
 	var pixels:PackedColorArray = PackedColorArray()
@@ -145,4 +154,4 @@ func to_image() -> Image:
 		var idx = point_to_index(tile_pos)
 		pixels[idx] = rules[get_filled_tile_value(tiles[idx])].debug_color
 	
-	return Image.create_from_data(width,tiles.size()/width,false,Image.FORMAT_RGBF,pixels.to_byte_array())
+	return Image.create_from_data(width,tiles.size()/width,false,Image.FORMAT_RGBAF,pixels.to_byte_array())
