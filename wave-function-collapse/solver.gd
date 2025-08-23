@@ -6,6 +6,9 @@ var tiles:Array[int] # last bit 1 means "filled", for others 1 means "not that s
 var width:int
 var random:RandomNumberGenerator = RandomNumberGenerator.new()
 
+func _init():
+	random.randomize()
+
 # false means constraints satisfied
 func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
 	for tile in get_nearby_tiles(tile_pos):
@@ -71,7 +74,11 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 			if solve_tile(stack[i]):
 				something_changed = true
 		
-		if not something_changed:
+		for tile_pos in get_filled_tiles(stack):
+			stack.append_array((get_nearby_tiles_pos(tile_pos)))
+		stack = get_unfilled_tiles(stack)
+		
+		if not something_changed and stack.size() > 0:
 			var entropys:Array[float] = []
 			for tile_pos in stack:
 				var entropy:float = 0
@@ -92,9 +99,6 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 			tiles[point_to_index(stack[min_entropy_idx])] = get_random_state(tiles[point_to_index(stack[min_entropy_idx])])
 			stack.append_array(get_nearby_tiles_pos(stack[min_entropy_idx]))
 		
-		for tile_pos in get_filled_tiles(stack):
-			stack.append_array((get_nearby_tiles_pos(tile_pos)))
-		stack = get_unfilled_tiles(stack)
 		something_changed = false
 
 func point_to_index(point:Vector2i) -> int:
@@ -133,10 +137,13 @@ func get_filled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
 	return tile_poses.filter(func(x): tiles[point_to_index(x)] & 2 ** rules.size())
 
 func get_unfilled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): not (tiles[point_to_index(x)] & 2 ** rules.size()))
+	return tile_poses.filter(func(x): (tiles[point_to_index(x)] & 2 ** rules.size()) == 0)
 
 func get_filled_tile_value(tile:int) -> int:
-	return log(tile-(2 ** rules.size()))/log(2)
+	for i in range(rules.size()):
+		if ~tile & (2 ** i):
+			return i
+	return 0
 
 func filled_tile_value_for(rule_idx:int):
 	return (~(2 ** rules.size()) - (2 ** rule_idx)) + (2 ** rules.size())

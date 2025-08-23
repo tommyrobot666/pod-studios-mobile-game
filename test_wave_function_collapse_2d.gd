@@ -6,6 +6,7 @@ extends WaveFunctionCollapse2D
 		test()
 
 func _ready() -> void:
+	random.seed = 123
 	test()
 
 func test() -> void:
