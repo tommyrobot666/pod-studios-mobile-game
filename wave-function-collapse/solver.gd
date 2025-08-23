@@ -146,7 +146,14 @@ func get_filled_tile_value(tile:int) -> int:
 	return 0
 
 func filled_tile_value_for(rule_idx:int):
-	return (~(2 ** rules.size()) - (2 ** rule_idx)) + (2 ** rules.size())
+	return all_ones_but_not_negitive_why_doesnt_godot_have_unsigned_numbers() ^ (1<<rule_idx)
+
+func all_ones_but_not_negitive_why_doesnt_godot_have_unsigned_numbers() -> int:
+	var output:int = 1
+	for i in range(rules.size()):
+		output = output << 1
+		output += 1
+	return output
 
 func to_image() -> Image:
 	var pixels:PackedColorArray = PackedColorArray()
