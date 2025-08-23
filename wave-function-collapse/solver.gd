@@ -13,14 +13,19 @@ func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
 			return ~tile & rules[rule_idx].nonadjacent # any matching pair of ones means that it can't be adjacent
 	return false
 
-func solve_tile(tile_pos:Vector2i) -> void:
+# true means something changed
+func solve_tile(tile_pos:Vector2i) -> bool:
+	var something_changed:bool = false
 	var tile:int = tiles[point_to_index(tile_pos)]
 	for i in range(rules.size()):
 		if ~tile & (2 ** i): # is a possible state
 			if solve_rule(tile_pos,i):
 				tile += 2 ** i # add state to "not that state" list
+				something_changed = true
 			if tile & (~tile)-1: # only one bit is 0
 				tile += (2 ** rules.size())
+				something_changed = true
+	return something_changed
 
 func get_random_state(tile:int) -> int:
 	var possible_states:Array[int] = []
@@ -42,14 +47,49 @@ func get_random_state(tile:int) -> int:
 	return (2 ** chossen_state) + (2 ** rules.size())
 
 func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
-	var stack:Array[Vector2i] = get_nearby_tiles_pos(start_pos)
+	var total_rules_weights:float = 0
+	var rules_chances:Array[float] = []
+	for rule_idx in range(rules.size()):
+		total_rules_weights += rules[rule_idx].weight
+	for rule_idx in range(rules.size()):
+		rules_chances.append(rules[rule_idx].weight/total_rules_weights)
+	
+	
 	if first_state < 0:
 		var idx = point_to_index(start_pos)
 		tiles[idx] = get_random_state(tiles[idx])
 	else:
 		tiles[point_to_index(start_pos)] = (2 ** first_state) + (2 ** rules.size())
+	
+	
+	var something_changed:bool
+	var stack:Array[Vector2i] = get_nearby_tiles_pos(start_pos)
 	while stack.size() > 0:
-		pass
+		for i in range(stack.size()):
+			if solve_tile(stack[i]):
+				something_changed = true
+		stack = get_unfilled_tiles(stack)
+		
+		if not something_changed:
+			var entropys:Array[float] = []
+			for tile_pos in stack:
+				var entropy:float = 0
+				var tile = tiles[point_to_index(tile_pos)]
+				for rule_idx in range(rules.size()):
+					if ~tile & (2 ** rule_idx): # is a possible state
+						var chance = rules_chances[rule_idx]
+						entropy -= chance*log(chance)
+				entropys.append(entropy)
+			var min_entropy:float = 0
+			var min_entropy_idx:float = 0
+			for i in range(stack.size()):
+				var entropy:float = entropys[i]
+				if entropy < min_entropy:
+					min_entropy = entropy
+					min_entropy_idx = i
+			
+			tiles[point_to_index(stack[min_entropy_idx])] = get_random_state(tiles[point_to_index(stack[min_entropy_idx])])
+			stack.append_array(get_unfilled_tiles(get_nearby_tiles_pos(stack[min_entropy_idx])))
 
 func point_to_index(point:Vector2i) -> int:
 	return point.x + point.y*width
@@ -85,6 +125,9 @@ func clear_tiles(new_size:Vector2i) -> void:
 
 func get_filled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
 	return tile_poses.filter(func(x): x & 2 ** rules.size())
+
+func get_unfilled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
+	return tile_poses.filter(func(x): not (x & 2 ** rules.size()))
 
 func get_filled_tile_value(tile:int) -> int:
 	return log(tile-(2 ** rules.size()))/log(2)
