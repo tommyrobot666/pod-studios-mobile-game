@@ -1,7 +1,7 @@
 extends Node
-class_name WaveFunctionCollapse2D
+class_name WaveFunctionCollapse2D2
 
-var tiles:Array[int] # last bit 1 means "filled", for others 1 means "not that state"
+var tiles:Array[Tile] # last bit 1 means "filled", for others 1 means "not that state"
 @export var rules:Array[TileRuleset] # rules is also tile types
 var width:int
 var random:RandomNumberGenerator = RandomNumberGenerator.new()
@@ -19,22 +19,21 @@ func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
 # true means something changed
 func solve_tile(tile_pos:Vector2i) -> bool:
 	var something_changed:bool = false
-	var tile:int = tiles[point_to_index(tile_pos)]
+	var tile:Tile = tiles[point_to_index(tile_pos)]
 	for i in range(rules.size()):
-		if tile ^ (1 << i): # is a possible state
+		if not tile.not_this.has(i): # is a possible state
 			if solve_rule(tile_pos,i):
-				tile += 2 ** i # add state to "not that state" list
+				tile.not_this.append(i) # add state to "not that state" list
 				something_changed = true
-			if tile & (all_ones_but_not_negitive_why_doesnt_godot_have_unsigned_numbers() ^ (1 << i)): # only one bit is 0
-				tile += (2 ** rules.size())
+			if tile.not_this.size() == rules.size()-1: # only one bit is 0
+				tile.filled = true
 				something_changed = true
-	tiles[point_to_index(tile_pos)] = tile
 	return something_changed
 
-func get_random_state(tile:int) -> int:
+func get_random_state(tile:Tile) -> Tile:
 	var possible_states:Array[int] = []
 	for i in range(rules.size()):
-		if tile ^ (1 << i): # is a possible state
+		if not tile.not_this.has(i): # is a possible state
 			possible_states.append(i)
 	
 	var chossen_state:int
@@ -134,19 +133,19 @@ func clear_tiles(new_size:Vector2i) -> void:
 		tiles.append(0)
 
 func get_filled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): tiles[point_to_index(x)] & (2 ** rules.size()))
+	return tile_poses.filter(func(x): x.filled)
 
 func get_unfilled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): (tiles[point_to_index(x)] & (2 ** rules.size())) == 0)
+	return tile_poses.filter(func(x): not x.filled)
 
-func get_filled_tile_value(tile:int) -> int:
-	for i in range(rules.size()):
-		if tile ^ (1 << i):
-			return i
-	return 0
+func get_filled_tile_value(tile:Tile) -> int:
+	return tile.value
 
 func filled_tile_value_for(rule_idx:int):
-	return all_ones_but_not_negitive_why_doesnt_godot_have_unsigned_numbers() ^ (1<<rule_idx)
+	var tile = Tile.new()
+	tile.filled = true
+	tile.value = rule_idx
+	return tile
 
 func all_ones_but_not_negitive_why_doesnt_godot_have_unsigned_numbers() -> int:
 	var output:int = 1
