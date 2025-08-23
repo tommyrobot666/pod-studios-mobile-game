@@ -8,8 +8,8 @@ extends WaveFunctionCollapse2D2
 func _ready() -> void:
 	random.seed = 123
 	test()
-	print(get_filled_tiles([Vector2i(3,3)]))
-	print(get_unfilled_tiles([Vector2i(3,3)]))
+	#print(get_filled_tiles([Vector2i(3,3)]))
+	#print(get_unfilled_tiles([Vector2i(3,3)]))
 
 func test() -> void:
 	clear_tiles(Vector2i(8,8))

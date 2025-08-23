@@ -12,8 +12,8 @@ func _init():
 # false means constraints satisfied
 func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
 	for tile in get_nearby_tiles(tile_pos):
-		if tile & (1 << rules.size()): # if tile is complete
-			return not (tile & rules[rule_idx].adjacent) # any matching pair of ones means that it can't be adjacent
+		if tile.filled: # if tile is complete
+			return not ((1<<tile.value) & rules[rule_idx].adjacent) # any matching pair of ones means that it can't be adjacent
 	return false
 
 # true means something changed
@@ -27,6 +27,10 @@ func solve_tile(tile_pos:Vector2i) -> bool:
 				something_changed = true
 			if tile.not_this.size() == rules.size()-1: # only one bit is 0
 				tile.filled = true
+				for j in range(rules.size()):
+					if not tile.not_this.has(j):
+						tile.value = j
+						break
 				something_changed = true
 	return something_changed
 
@@ -67,14 +71,18 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 	
 	
 	var something_changed:bool
-	var stack:Array[Vector2i] = get_nearby_tiles_pos(start_pos)
+	var stack:Array[Vector2i] = [start_pos]#get_nearby_tiles_pos(start_pos)
 	while stack.size() > 0:
 		for i in range(stack.size()):
 			if solve_tile(stack[i]):
 				something_changed = true
 		
+		print(get_filled_tiles(stack))
+		print(get_unfilled_tiles(stack))
 		for tile_pos in get_filled_tiles(stack):
-			stack.append_array((get_nearby_tiles_pos(tile_pos)))
+			for pos in get_nearby_tiles_pos(tile_pos):
+				if not stack.has(pos):
+					stack.append(pos)
 		stack = get_unfilled_tiles(stack)
 		
 		if not something_changed and stack.size() > 0:
@@ -83,7 +91,7 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 				var entropy:float = 0
 				var tile = tiles[point_to_index(tile_pos)]
 				for rule_idx in range(rules.size()):
-					if tile ^ (1 << rule_idx): # is a possible state
+					if not tile.not_this.has(rule_idx): # is a possible state
 						var chance = rules_chances[rule_idx]
 						entropy -= chance*log(chance)
 				entropys.append(entropy)
@@ -96,22 +104,24 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 					min_entropy_idx = i
 			
 			tiles[point_to_index(stack[min_entropy_idx])] = get_random_state(tiles[point_to_index(stack[min_entropy_idx])])
-			stack.append_array(get_nearby_tiles_pos(stack[min_entropy_idx]))
+			for pos in get_nearby_tiles_pos(stack[min_entropy_idx]):
+				if not stack.has(pos):
+					stack.append(pos)
 		
 		something_changed = false
 
 func point_to_index(point:Vector2i) -> int:
 	return point.x + point.y*width
 
-func get_nearby_tiles(tile_pos:Vector2i) -> Array[int]:
-	var output:Array[int] = []
+func get_nearby_tiles(tile_pos:Vector2i) -> Array[Tile]:
+	var output:Array[Tile] = []
 	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.RIGHT]:
 		var point = tile_pos + dir
 		var pos = point_to_index(point)
 		if tiles.size() > pos and point.x > 0 and point.y > 0:
 			output.append(tiles[pos])
 		else:
-			output.append(0)
+			output.append(Tile.new())
 	return output
 
 func get_nearby_tiles_pos(tile_pos:Vector2i) -> Array[Vector2i]:
@@ -130,13 +140,32 @@ func clear_tiles(new_size:Vector2i) -> void:
 	tiles.clear()
 	width = new_size.x
 	for __ in range(new_size.x*new_size.y):
-		tiles.append(0)
+		tiles.append(Tile.new())
 
 func get_filled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): x.filled)
+	var why_isnt_this_function_working:Array[Vector2i]
+	
+	for idc in tile_poses:
+		var tile = tiles[point_to_index(idc)]
+		#print(tile.filled)
+		if tile.filled:
+			why_isnt_this_function_working.append(idc)
+	
+	return why_isnt_this_function_working
+	
+	#return tile_poses.filter(func(x): tiles[point_to_index(x)].filled)
 
 func get_unfilled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
-	return tile_poses.filter(func(x): not x.filled)
+	var why_isnt_this_function_working:Array[Vector2i]
+	
+	for idc in tile_poses:
+		var tile = tiles[point_to_index(idc)]
+		#print(tile.filled)
+		if not tile.filled:
+			why_isnt_this_function_working.append(idc)
+	
+	return why_isnt_this_function_working
+	#return tile_poses.filter(func(x): not tiles[point_to_index(x)].filled)
 
 func get_filled_tile_value(tile:Tile) -> int:
 	return tile.value
@@ -146,13 +175,6 @@ func filled_tile_value_for(rule_idx:int):
 	tile.filled = true
 	tile.value = rule_idx
 	return tile
-
-func all_ones_but_not_negitive_why_doesnt_godot_have_unsigned_numbers() -> int:
-	var output:int = 1
-	for i in range(rules.size()):
-		output = output << 1
-		output += 1
-	return output
 
 func to_image() -> Image:
 	var pixels:PackedColorArray = PackedColorArray()
