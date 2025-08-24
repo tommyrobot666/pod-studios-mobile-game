@@ -6,13 +6,13 @@ extends WaveFunctionCollapse2D2
 		test()
 
 func _ready() -> void:
-	random.seed = 123
+	#random.seed = 123
 	test()
 	#print(get_filled_tiles([Vector2i(3,3)]))
 	#print(get_unfilled_tiles([Vector2i(3,3)]))
 
 func test() -> void:
-	clear_tiles(Vector2i(8,8))
+	clear_tiles(Vector2i(16,16))
 	solve_all_tiles(Vector2i(3,3),-1)
 	if get_child_count() > 0:
 		get_child(0).queue_free()
