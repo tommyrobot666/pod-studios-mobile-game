@@ -41,7 +41,7 @@ func place_all_3dthings(placement_dir:PlacementDir) -> void:
 
 
 func get_tiles_from_wave_function_collapse(wfc:WaveFunctionCollapse2D2):
-	tiles_size = Vector2i(wfc.width,wfc.tiles.size()/wfc.width)
+	tiles_size = Vector2i(wfc.width,wfc.tiles.size() / wfc.width)
 	tiles.clear()
 	for tile in (get_child(0) as WaveFunctionCollapse2D2).tiles:
 		tiles.append(tile.value)
