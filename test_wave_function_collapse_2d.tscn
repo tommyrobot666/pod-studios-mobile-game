@@ -1,44 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://canfe2vytmouw"]
+[gd_scene load_steps=5 format=3 uid="uid://canfe2vytmouw"]
 
 [ext_resource type="Script" uid="uid://ddyopqtwaqp13" path="res://test_wave_function_collapse_2d.gd" id="1_arjmo"]
 [ext_resource type="Script" uid="uid://cfvcsjnjlsax5" path="res://wave-function-collapse/tile_ruleset.gd" id="2_arjmo"]
 
-[sub_resource type="Resource" id="Resource_b3813"]
-script = ExtResource("2_arjmo")
-debug_color = Color(1, 1, 1, 1)
-weight = 4.0
-adjacent = 18
-metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
-
 [sub_resource type="Resource" id="Resource_arjmo"]
 script = ExtResource("2_arjmo")
-debug_color = Color(1, 0, 0, 1)
-weight = 1.0
-adjacent = 31
+debug_color = Color(1, 1, 1, 1)
+weight = 5.0
+adjacent = 3
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
-[sub_resource type="Resource" id="Resource_aqx6t"]
+[sub_resource type="Resource" id="Resource_b3813"]
 script = ExtResource("2_arjmo")
-debug_color = Color(0, 1, 0, 1)
+debug_color = Color(0.519162, 0.519162, 0.519162, 1)
 weight = 1.0
-adjacent = 0
-metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
-
-[sub_resource type="Resource" id="Resource_7xxc7"]
-script = ExtResource("2_arjmo")
-debug_color = Color(1, 1, 0, 1)
-weight = 1.0
-adjacent = 0
-metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
-
-[sub_resource type="Resource" id="Resource_yrfvd"]
-script = ExtResource("2_arjmo")
-debug_color = Color(0, 1, 1, 1)
-weight = 1.0
-adjacent = 0
+adjacent = 3
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
 [node name="WaveFunctionCollapse2D" type="Node"]
 script = ExtResource("1_arjmo")
-rules = Array[ExtResource("2_arjmo")]([SubResource("Resource_b3813"), SubResource("Resource_arjmo"), SubResource("Resource_aqx6t"), SubResource("Resource_7xxc7"), SubResource("Resource_yrfvd")])
+rules = Array[ExtResource("2_arjmo")]([SubResource("Resource_arjmo"), SubResource("Resource_b3813")])
 metadata/_custom_type_script = "uid://wlvrc1y52f1h"
