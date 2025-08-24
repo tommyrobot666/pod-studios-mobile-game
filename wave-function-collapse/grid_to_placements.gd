@@ -40,6 +40,12 @@ func place_all_3dthings(placement_dir:PlacementDir) -> void:
 					total_offset.x += offset.x
 
 
+func get_tiles_from_wave_function_collapse(wfc:WaveFunctionCollapse2D2):
+	tiles_size = Vector2i(wfc.width,wfc.tiles.size()/wfc.width)
+	tiles.clear()
+	for tile in (get_child(0) as WaveFunctionCollapse2D2).tiles:
+		tiles.append(tile.value)
+
 
 func point_to_index(point:Vector2i) -> int:
 	return point.x + point.y*tiles_size.x

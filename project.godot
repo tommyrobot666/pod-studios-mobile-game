@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="Wave function collapse"
+run/main_scene="uid://5kl6uy7oj82t"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://cqxx6u145rihk"
 
 [dotnet]
 

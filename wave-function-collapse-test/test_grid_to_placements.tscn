@@ -1,11 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://5kl6uy7oj82t"]
+[gd_scene load_steps=10 format=3 uid="uid://5kl6uy7oj82t"]
 
 [ext_resource type="Script" uid="uid://c1rwgi3g2jtup" path="res://wave-function-collapse-test/test_grid_to_placements.gd" id="1_uy84w"]
 [ext_resource type="Script" uid="uid://hw4uek8k2ifh" path="res://wave-function-collapse/grid_to_placements_placement.gd" id="2_dreem"]
 [ext_resource type="PackedScene" uid="uid://canfe2vytmouw" path="res://wave-function-collapse-test/test_wave_function_collapse_2d.tscn" id="2_uy84w"]
+[ext_resource type="PackedScene" uid="uid://b3fttne4abj3n" path="res://wave-function-collapse-test/test_floor.tscn" id="3_tucum"]
+[ext_resource type="PackedScene" uid="uid://byyvasbi4c1km" path="res://wave-function-collapse-test/test_ramp.tscn" id="4_rj8ia"]
+[ext_resource type="Script" uid="uid://cd5ngdikotdpa" path="res://wave-function-collapse-test/camera_3d.gd" id="6_rj8ia"]
 
 [sub_resource type="Resource" id="Resource_e0jq8"]
 script = ExtResource("2_dreem")
+scene = ExtResource("3_tucum")
+size = Vector2(20, 20)
+metadata/_custom_type_script = "uid://hw4uek8k2ifh"
+
+[sub_resource type="Resource" id="Resource_7o236"]
+script = ExtResource("2_dreem")
+scene = ExtResource("4_rj8ia")
 size = Vector2(0, 0)
 metadata/_custom_type_script = "uid://hw4uek8k2ifh"
 
@@ -13,13 +23,14 @@ metadata/_custom_type_script = "uid://hw4uek8k2ifh"
 
 [node name="GridToPlacements" type="Node3D"]
 script = ExtResource("1_uy84w")
-placements = Array[ExtResource("2_dreem")]([SubResource("Resource_e0jq8"), null])
+placements = Array[ExtResource("2_dreem")]([SubResource("Resource_e0jq8"), SubResource("Resource_7o236")])
 metadata/_custom_type_script = "uid://7yj47w8l8346"
 
 [node name="WaveFunctionCollapse2D" parent="." instance=ExtResource("2_uy84w")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.924878, 0.380263, 0, -0.380263, 0.924878, 0, 15.8267, 23.327)
+script = ExtResource("6_rj8ia")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("TorusMesh_g4o0y")
