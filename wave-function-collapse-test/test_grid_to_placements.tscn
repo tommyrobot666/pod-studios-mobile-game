@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://5kl6uy7oj82t"]
+
+[ext_resource type="Script" uid="uid://c1rwgi3g2jtup" path="res://wave-function-collapse-test/test_grid_to_placements.gd" id="1_uy84w"]
+[ext_resource type="Script" uid="uid://hw4uek8k2ifh" path="res://wave-function-collapse/grid_to_placements_placement.gd" id="2_dreem"]
+[ext_resource type="PackedScene" uid="uid://canfe2vytmouw" path="res://wave-function-collapse-test/test_wave_function_collapse_2d.tscn" id="2_uy84w"]
+
+[sub_resource type="Resource" id="Resource_e0jq8"]
+script = ExtResource("2_dreem")
+size = Vector2(0, 0)
+metadata/_custom_type_script = "uid://hw4uek8k2ifh"
+
+[sub_resource type="TorusMesh" id="TorusMesh_g4o0y"]
+
+[node name="GridToPlacements" type="Node3D"]
+script = ExtResource("1_uy84w")
+placements = Array[ExtResource("2_dreem")]([SubResource("Resource_e0jq8"), null])
+metadata/_custom_type_script = "uid://7yj47w8l8346"
+
+[node name="WaveFunctionCollapse2D" parent="." instance=ExtResource("2_uy84w")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.924878, 0.380263, 0, -0.380263, 0.924878, 0, 15.8267, 23.327)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_g4o0y")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.0385273, 0.999258, 0, -0.999258, -0.0385273, 0, 0, 0)

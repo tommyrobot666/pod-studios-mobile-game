@@ -2,6 +2,7 @@ extends Node
 class_name WaveFunctionCollapse2D2
 
 signal solve_all_tiles_step
+signal solve_all_tiles_done
 
 var tiles:Array[Tile] # last bit 1 means "filled", for others 1 means "not that state"
 @export var rules:Array[TileRuleset] # rules is also tile types
@@ -92,6 +93,7 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 		
 		something_changed = false
 		solve_all_tiles_step.emit()
+	solve_all_tiles_done.emit()
 
 func point_to_index(point:Vector2i) -> int:
 	return point.x + point.y*width
@@ -101,7 +103,7 @@ func get_nearby_tiles(tile_pos:Vector2i) -> Array[Tile]:
 	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.RIGHT]:
 		var point = tile_pos + dir
 		var pos = point_to_index(point)
-		if tiles.size() > pos and point.x >= 0 and point.y >= 0:
+		if tiles.size() > pos and point.x >= 0 and point.y >= 0 and point.x < width:
 			output.append(tiles[pos])
 		else:
 			output.append(Tile.new())
@@ -117,7 +119,7 @@ func get_nearby_tiles_pos(tile_pos:Vector2i) -> Array[Vector2i]:
 
 func is_point_in_tiles(tile_pos:Vector2i):
 	var idx = point_to_index(tile_pos)
-	return tiles.size() > idx and tile_pos.x >= 0 and tile_pos.y >= 0
+	return tiles.size() > idx and tile_pos.x >= 0 and tile_pos.y >= 0 and tile_pos.x < width
 
 func clear_tiles(new_size:Vector2i) -> void:
 	tiles.clear()
