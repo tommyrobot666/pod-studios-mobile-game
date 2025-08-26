@@ -17,6 +17,11 @@ extends MeshInstance3D
 		end_time = x
 		calculate_player_jump()
 		draw_jump()
+@export var min_height:float:
+	set(x):
+		min_height = x
+		calculate_player_jump()
+		draw_jump()
 @export var clear:bool:
 	set(x):
 		mesh = ArrayMesh.new()
@@ -27,8 +32,15 @@ extends MeshInstance3D
 @export var start_gravity:float
 @export var end_velocity:float
 @export var end_gravity:float
+@export var min_jump_time:float
+@export_group("mesh_settings")
+@export var mesh_detail:int = 1
+@export var mesh_height:float = -1
 
 func _ready() -> void:
+	if not Engine.is_editor_hint():
+		queue_free()
+	
 	mesh = ArrayMesh.new()
 	calculate_player_jump()
 	draw_jump()
@@ -43,17 +55,19 @@ func draw_jump():
 	var colors = PackedColorArray()
 	
 	verts.append(Vector3.ZERO)
-	verts.append(Vector3(start_time/2,y_at(start_time/2,start_velocity,-start_gravity),0))
-	verts.append(Vector3(start_time/2,y_at(start_time/2,start_velocity,-start_gravity)-1,0))
-	verts.append(Vector3(start_time,y_at(start_time,start_velocity,-start_gravity),0))
-	verts.append(Vector3(start_time,y_at(start_time,start_velocity,-start_gravity)-1,0))
-	verts.append(Vector3(start_time+(end_time/2),y_at(end_time/2,end_velocity,-end_gravity),0))
-	verts.append(Vector3(start_time+(end_time/2),y_at(end_time/2,end_velocity,-end_gravity)-1,0))
+	for i:float in range(mesh_detail-1):
+		verts.append(Vector3(start_time*(i/mesh_detail),y_at(start_time*(i/mesh_detail),start_velocity,start_gravity),0))
+		verts.append(Vector3(start_time*(i/mesh_detail),y_at(start_time*(i/mesh_detail),start_velocity,start_gravity)+mesh_height,0))
+	verts.append(Vector3(start_time,y_at(start_time,start_velocity,start_gravity),0))
+	verts.append(Vector3(start_time,y_at(start_time,start_velocity,start_gravity)+mesh_height,0))
+	for i:float in range(mesh_detail-1):
+		verts.append(Vector3(start_time+(end_time*(i/mesh_detail)),y_at(end_time+end_time*(i/mesh_detail),end_velocity,end_gravity),0))
+		verts.append(Vector3(start_time+(end_time*(i/mesh_detail)),y_at(end_time+end_time*(i/mesh_detail),end_velocity,end_gravity)+mesh_height,0))
 	verts.append(Vector3(start_time+end_time,0,0))
 	
-	indices.append_array(range(8))
+	indices.append_array(range(4+(mesh_detail-1)*4))
 	
-	for __ in range(8):
+	for __ in range(4+(mesh_detail-1)*4):
 		uvs.append(Vector2.ZERO)
 		normals.append(Vector3.BACK)
 		colors.append(Color.AQUA)
@@ -70,6 +84,7 @@ func y_at(t,velocity,gravity):
 
 func calculate_player_jump():
 	start_velocity = (2*height)/(start_time)
-	start_gravity = (2*height)/(start_time*start_time)
+	start_gravity = -(2*height)/(start_time*start_time)
 	end_velocity = (2*height)/(end_time)
-	end_gravity = (2*height)/(end_time*end_time)
+	end_gravity = -(2*height)/(end_time*end_time)
+	min_jump_time = (-start_velocity + sqrt(start_velocity*start_velocity + 2*start_gravity*min_height)) / start_gravity
