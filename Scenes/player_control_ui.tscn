@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://dahktm4ugqnlb"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_37nxt"]
+size = Vector2(100, 100)
+
+[node name="PlayerControlUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="JumpButtonLocations" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Jump" type="TouchScreenButton" parent="JumpButtonLocations"]
+position = Vector2(172, 874)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+
+[node name="WalkJoystickLocations" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Walk" type="TouchScreenButton" parent="WalkJoystickLocations"]
+position = Vector2(172, 874)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+
+[node name="LookJoystickLocations" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Look" type="TouchScreenButton" parent="LookJoystickLocations"]
+position = Vector2(172, 874)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
