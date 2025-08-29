@@ -3,16 +3,18 @@ extends CharacterBody3D
 @export var mouse_sensitivity = 0.5
 var camera_rotation = Vector3()
 
-@onready var head = $Camera3D 
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED) 
-
+	
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		rotation_degrees.y -= event.relative.x * 0.5
-		
+		get_node("Camera3D").rotation_degrees.x -= event.relative.y * 0.2
+		get_node("Camera3D").rotation_degrees.x = clamp(
+			get_node("Camera3D").rotation_degrees.x, -60.0, 60.0
+		)
 	elif event.is_action_pressed("ui_cancel"): 
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE) 
 
@@ -33,7 +35,7 @@ func _physics_process(delta):
 	velocity.x = direction.x * SPEED
 	velocity.z = direction.z * SPEED
 	
-	velocity.y -= 20.0 * delta
+	velocity.y -= 30.0 * delta
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = 25.0 
 	elif Input.is_action_just_released("jump") and velocity.y > 0.0:
