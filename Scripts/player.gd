@@ -26,7 +26,7 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		rotation_degrees.y -= event.relative.x * 0.5
 		rotation_degrees.x -= event.relative.y * 0.25
-		
+	
 	elif event.is_action_pressed("ui_cancel"): 
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE) 
 		
@@ -44,9 +44,9 @@ func _physics_process(delta):
 	
 	var SPEED = 20.0
 	
-	var input_direction_2D = Input.get_vector(
+	var input_direction_2D = (Input.get_vector(
 		"move_left", "move_right", "move_forward","move_back"
-	)
+	) + PlayerControlUi.walk.normalized()).normalized()
 	var input_direction_3D = Vector3(
 		input_direction_2D.x, 0.0, input_direction_2D.y
 	)
@@ -73,11 +73,11 @@ func _physics_process(delta):
 		velocity.y -= gravity * delta
 	
 	# for if jump is stopped before min_jump_time
-	if Input.is_action_just_released("jump") and rising:
+	if (Input.is_action_just_released("jump") or PlayerControlUi.jump_just_released) and rising:
 		stop_jump = true
 	
 	# handle jump
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	if (Input.is_action_just_pressed("jump") or PlayerControlUi.jump_just_pressed) and is_on_floor():
 		velocity.y = jump_velocity 
 		jump_time = 0
 		rising = true
@@ -90,3 +90,8 @@ func _physics_process(delta):
 
 	move_and_slide()
 	jump_time += delta
+	
+	rotation_degrees.y -= PlayerControlUi.look.x * 0.5
+	rotation_degrees.x -= PlayerControlUi.look.y * 0.25
+	
+	PlayerControlUi.input_read()
