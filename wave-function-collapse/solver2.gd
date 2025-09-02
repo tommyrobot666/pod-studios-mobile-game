@@ -16,21 +16,42 @@ func _init():
 
 # true means constraints satisfied
 func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
+	var solved = true
 	for tile in h_get_nearby_tiles(tile_pos):
+		if tile.value == 0:
+			continue
 		if tile.filled: # if tile is complete
 			# (this evals as an int that gets converted to bool)
 			# removind the not made it work, idk why
-			return ((1<<tile.value) & rules[rule_idx].h_adjacent) # if tile not in adjacent, then can't be next to
+			if not ((1<<tile.value) & rules[rule_idx].h_adjacent):# if tile not in adjacent, then can't be next to
+				solved = false
 	for tile in v_get_nearby_tiles(tile_pos):
+		if tile.value == 0:
+			continue
 		if tile.filled:
-			return ((1<<tile.value) & rules[rule_idx].v_adjacent)
-	return true
+			if not ((1<<tile.value) & rules[rule_idx].v_adjacent):
+				solved = false
+	return solved
 
 # true means something changed
 func solve_tile(tile_pos:Vector2i) -> bool:
 	var something_changed:bool = false
 	var tile:Tile = tiles[point_to_index(tile_pos)]
 	for i in range(rules.size()):
+		if i == 0:
+			var near_tiles = 0
+			var zero_tiles = 0
+			for near_tile in get_nearby_tiles(tile_pos):
+				near_tiles += 1
+				if near_tile.filled and near_tile.value == 0:
+					zero_tiles += 1
+			if zero_tiles == near_tiles and near_tiles != 0:
+				tile.filled = true
+				tile.value = 0
+				tile.possible_states = [0]
+		
+		
+		
 		if tile.possible_states.has(i): # is a possible state
 			if not solve_rule(tile_pos,i):
 				tile.possible_states.erase(i) # remove from possible_states
@@ -38,11 +59,18 @@ func solve_tile(tile_pos:Vector2i) -> bool:
 			if tile.possible_states.size() == 1: # only one possible_states
 				tile.filled = true
 				tile.value = tile.possible_states[0]
+	if tile.possible_states.is_empty():
+		tile.filled = true
+		tile.value = 0
+		tile.possible_states = [0]
 	return something_changed
 
 func get_random_state(tile:Tile) -> Tile:
 	var chossen_state:int
-	var value:float = random.randf_range(0,total_rules_weights)
+	var total_possible_rules_weights = 0
+	for rule_idx in tile.possible_states:
+		total_possible_rules_weights += rules[rule_idx].weight
+	var value:float = random.randf_range(0,total_possible_rules_weights)
 	var total:float = 0
 	for rule_idx in tile.possible_states:
 		total += rules[rule_idx].weight
@@ -151,7 +179,7 @@ func clear_tiles(new_size:Vector2i) -> void:
 	width = new_size.x
 	for __ in range(new_size.x*new_size.y):
 		var new_tile = Tile.new()
-		for i in range(rules.size()):
+		for i in range(1,rules.size()):
 			new_tile.possible_states.append(i)
 		tiles.append(new_tile)
 
