@@ -25,12 +25,24 @@ func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
 			# removind the not made it work, idk why
 			if not ((1<<tile.value) & rules[rule_idx].h_adjacent):# if tile not in adjacent, then can't be next to
 				solved = false
+			if ((1<<tile.value) & rules[rule_idx].not_h_adjacent):
+				solved = false
+	var index = 0
 	for tile in v_get_nearby_tiles(tile_pos):
+		if index == 0:
+			if (not rules[rule_idx].top_adjacent_to_zero) and tile.value == 0:
+				solved = false
+		
 		if tile.value == 0:
 			continue
 		if tile.filled:
 			if not ((1<<tile.value) & rules[rule_idx].v_adjacent):
 				solved = false
+		if tile.filled:
+			if ((1<<tile.value) & rules[rule_idx].not_v_adjacent):
+				solved = false
+		
+		index += 1
 	return solved
 
 # true means something changed
@@ -91,10 +103,14 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 	var stack:Array[Vector2i] = get_nearby_tiles_pos(start_pos)
 	while stack.size() > 0:
 		for i in range(stack.size()):
+			if stack[i].x == 2:
+				print(2)
 			if solve_tile(stack[i]):
 				something_changed = true
 		
 		for tile_pos in get_filled_tiles(stack):
+			if tiles[point_to_index(tile_pos)].value == 0:
+				continue
 			for pos in get_nearby_tiles_pos(tile_pos):
 				if not stack.has(pos):
 					stack.append(pos)

@@ -55,9 +55,12 @@ data = PackedVector3Array(0.1138, 1.2628, -0.0502, 0.1739, 0.6314, -0.0735, 0.11
 [sub_resource type="Resource" id="Resource_iivbl"]
 script = ExtResource("19_iivbl")
 debug_color = Color(1, 1, 1, 1)
-weight = 1.0
+weight = 0.0
 h_adjacent = 0
 v_adjacent = 0
+not_h_adjacent = 0
+not_v_adjacent = 0
+top_adjacent_to_zero = false
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
 [sub_resource type="Resource" id="Resource_7nbq1"]
@@ -66,30 +69,42 @@ debug_color = Color(1, 0, 0, 1)
 weight = 1.0
 h_adjacent = 0
 v_adjacent = 14
+not_h_adjacent = 0
+not_v_adjacent = 1
+top_adjacent_to_zero = true
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
 [sub_resource type="Resource" id="Resource_exi56"]
 script = ExtResource("19_iivbl")
 debug_color = Color(0, 0, 1, 1)
 weight = 1.0
-h_adjacent = 1
-v_adjacent = 11
+h_adjacent = 16
+v_adjacent = 14
+not_h_adjacent = 16
+not_v_adjacent = 1
+top_adjacent_to_zero = true
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
 [sub_resource type="Resource" id="Resource_7t8sx"]
 script = ExtResource("19_iivbl")
 debug_color = Color(0, 1, 0, 1)
 weight = 1.0
-h_adjacent = 1
-v_adjacent = 15
+h_adjacent = 0
+v_adjacent = 14
+not_h_adjacent = 0
+not_v_adjacent = 1
+top_adjacent_to_zero = true
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
 [sub_resource type="Resource" id="Resource_mg4q0"]
 script = ExtResource("19_iivbl")
 debug_color = Color(0, 1, 1, 1)
 weight = 1.0
-h_adjacent = 21
-v_adjacent = 1
+h_adjacent = 4
+v_adjacent = 0
+not_h_adjacent = 0
+not_v_adjacent = 0
+top_adjacent_to_zero = true
 metadata/_custom_type_script = "uid://cfvcsjnjlsax5"
 
 [node name="Game" type="Node3D"]
@@ -3117,5 +3132,5 @@ grow_vertical = 2
 [node name="TextureRect" type="TextureRect" parent="GUI/Control"]
 texture_filter = 1
 layout_mode = 0
-offset_right = 253.0
-offset_bottom = 259.0
+offset_right = 567.0
+offset_bottom = 557.0
