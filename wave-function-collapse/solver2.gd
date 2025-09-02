@@ -16,11 +16,14 @@ func _init():
 
 # true means constraints satisfied
 func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
-	for tile in get_nearby_tiles(tile_pos):
+	for tile in h_get_nearby_tiles(tile_pos):
 		if tile.filled: # if tile is complete
 			# (this evals as an int that gets converted to bool)
 			# removind the not made it work, idk why
-			return ((1<<tile.value) & rules[rule_idx].adjacent) # if tile not in adjacent, then can't be next to
+			return ((1<<tile.value) & rules[rule_idx].h_adjacent) # if tile not in adjacent, then can't be next to
+	for tile in v_get_nearby_tiles(tile_pos):
+		if tile.filled:
+			return ((1<<tile.value) & rules[rule_idx].v_adjacent)
 	return true
 
 # true means something changed
@@ -101,6 +104,28 @@ func point_to_index(point:Vector2i) -> int:
 func get_nearby_tiles(tile_pos:Vector2i) -> Array[Tile]:
 	var output:Array[Tile] = []
 	for dir in [Vector2i.UP,Vector2i.LEFT,Vector2i.DOWN,Vector2i.RIGHT]:
+		var point = tile_pos + dir
+		var pos = point_to_index(point)
+		if tiles.size() > pos and point.x >= 0 and point.y >= 0 and point.x < width:
+			output.append(tiles[pos])
+		else:
+			output.append(Tile.new())
+	return output
+
+func v_get_nearby_tiles(tile_pos:Vector2i) -> Array[Tile]:
+	var output:Array[Tile] = []
+	for dir in [Vector2i.UP,Vector2i.DOWN]:
+		var point = tile_pos + dir
+		var pos = point_to_index(point)
+		if tiles.size() > pos and point.x >= 0 and point.y >= 0 and point.x < width:
+			output.append(tiles[pos])
+		else:
+			output.append(Tile.new())
+	return output
+
+func h_get_nearby_tiles(tile_pos:Vector2i) -> Array[Tile]:
+	var output:Array[Tile] = []
+	for dir in [Vector2i.LEFT,Vector2i.RIGHT]:
 		var point = tile_pos + dir
 		var pos = point_to_index(point)
 		if tiles.size() > pos and point.x >= 0 and point.y >= 0 and point.x < width:
