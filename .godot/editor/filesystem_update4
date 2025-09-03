@@ -1,2 +1,4 @@
 res://Scenes/game.tscn
-res://Scripts/player.gd
+res://player_3d_template.tscn
+res://character_body_3d.gd
+res://Assets/Character Assets/sophia_skin/sophia_skin.tscn

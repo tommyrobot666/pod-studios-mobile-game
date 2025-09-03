@@ -7,9 +7,9 @@ func _ready():
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		rotation_degrees.y -= event.relative.x * 0.5
-		get_node("Camera3D").rotation_degrees.x -= event.relative.y * 0.2
-		get_node("Camera3D").rotation_degrees.x = clamp(
-			get_node("Camera3D").rotation_degrees.x, -45.0, 45.0
+		get_node("CameraPivot/Camera3D").rotation_degrees.x -= event.relative.y * 0.2
+		get_node("CameraPivot/Camera3D").rotation_degrees.x = clamp(
+			get_node("CameraPivot/Camera3D").rotation_degrees.x, -45.0, 45.0
 		)
 	elif event.is_action_pressed("ui_cancel"): 
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE) 
