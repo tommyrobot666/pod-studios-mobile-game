@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dcfphty1wcau4"]
+[gd_scene load_steps=29 format=3 uid="uid://dcfphty1wcau4"]
 
 [ext_resource type="PackedScene" uid="uid://cg4mwi3aiht2j" path="res://Scenes/player.tscn" id="1_ebmjs"]
 [ext_resource type="Material" uid="uid://ci4aqwvp35gc8" path="res://Assets/Environment Assets/tres files/347433.tres" id="2_wowpa"]
@@ -57,23 +57,15 @@ script = ExtResource("19_iivbl")
 debug_color = Color(1, 0, 0, 1)
 weight = 1.0
 h_adjacent = Array[int]([0, 1])
-v_adjacent = Array[int]([0, 1])
+v_adjacent = Array[int]([0])
 metadata/_custom_type_script = "uid://dumyru6h7u4wa"
 
 [sub_resource type="Resource" id="Resource_exi56"]
 script = ExtResource("19_iivbl")
 debug_color = Color(0, 0, 1, 1)
 weight = 1.0
-h_adjacent = Array[int]([0, 1, 2])
-v_adjacent = Array[int]([0, 1, 2])
-metadata/_custom_type_script = "uid://dumyru6h7u4wa"
-
-[sub_resource type="Resource" id="Resource_iivbl"]
-script = ExtResource("19_iivbl")
-debug_color = Color(0, 1, 0, 1)
-weight = 1.0
-h_adjacent = Array[int]([1, 2])
-v_adjacent = Array[int]([1, 2])
+h_adjacent = Array[int]([0])
+v_adjacent = Array[int]([1])
 metadata/_custom_type_script = "uid://dumyru6h7u4wa"
 
 [node name="Game" type="Node3D"]
@@ -3085,7 +3077,7 @@ skeleton = NodePath("../..")
 
 [node name="WaveFunctionCollapse2D2" type="Node" parent="."]
 script = ExtResource("18_iivbl")
-rules = Array[ExtResource("19_iivbl")]([SubResource("Resource_7nbq1"), SubResource("Resource_exi56"), SubResource("Resource_iivbl")])
+rules = Array[ExtResource("19_iivbl")]([SubResource("Resource_7nbq1"), SubResource("Resource_exi56")])
 metadata/_custom_type_script = "uid://bvlmc8t7atspx"
 
 [node name="GUI" type="CanvasLayer" parent="."]

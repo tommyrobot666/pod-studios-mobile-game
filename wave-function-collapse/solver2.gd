@@ -233,6 +233,8 @@ func get_not_any_tiles(tiles:Array[Tile]) -> Array[Tile]:
 
 func filled_tile_value_for(rule_idx:int):
 	var tile = Tile.new()
+	if rule_idx == -1:
+		return tile
 	tile.filled = true
 	tile.value = rule_idx
 	tile.possible_states.append(rule_idx)
