@@ -82,13 +82,13 @@ metadata/_custom_type_script = "uid://dumyru6h7u4wa"
 
 [sub_resource type="Resource" id="Resource_7t8sx"]
 script = ExtResource("21_exi56")
-size = Vector2(0, 0)
+size = Vector2(20, -20)
 metadata/_custom_type_script = "uid://hw4uek8k2ifh"
 
 [sub_resource type="Resource" id="Resource_mg4q0"]
 script = ExtResource("21_exi56")
 scene = ExtResource("22_mg4q0")
-size = Vector2(20, 20)
+size = Vector2(0, 0)
 metadata/_custom_type_script = "uid://hw4uek8k2ifh"
 
 [sub_resource type="Resource" id="Resource_22asu"]
@@ -103,6 +103,7 @@ size = Vector3(10, 1, 10)
 [node name="Game" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_ebmjs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -2.38419e-07, 1, 0, -1, -2.38419e-07, 0, 50, 0)
@@ -3114,6 +3115,7 @@ rules = Array[ExtResource("19_iivbl")]([SubResource("Resource_7nbq1"), SubResour
 metadata/_custom_type_script = "uid://bvlmc8t7atspx"
 
 [node name="GridToPlacements" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 0)
 script = ExtResource("20_exi56")
 placements = Array[ExtResource("21_exi56")]([SubResource("Resource_7t8sx"), SubResource("Resource_mg4q0"), SubResource("Resource_22asu")])
 metadata/_custom_type_script = "uid://7yj47w8l8346"
