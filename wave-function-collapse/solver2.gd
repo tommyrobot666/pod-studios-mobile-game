@@ -127,20 +127,20 @@ func solve_all_tiles(start_pos:Vector2i,first_state:int) -> void:
 					stack.append(pos)
 		
 		# shuffle stack to increase randomness (built-in function uses global random)
-		#fisher_yates_shuffle(stack)
+		fisher_yates_shuffle(stack)
 		something_changed = false
 		solve_all_tiles_step.emit()
 	solve_all_tiles_done.emit()
 
-#func fisher_yates_shuffle(ls:Array) -> void:
-	#var j:int = 0
-	#for i in range(ls.size()):
-		#j = random.randi_range(0,ls.size()-i)
-		#
-		## swap
-		#var tmp = ls[i]
-		#ls[i] = ls[j]
-		#ls[j] = tmp
+func fisher_yates_shuffle(ls:Array) -> void:
+	var j:int = 0
+	for i in range(ls.size()):
+		j = random.randi_range(0,ls.size()-i-1)
+		
+		# swap
+		var tmp = ls[i]
+		ls[i] = ls[j]
+		ls[j] = tmp
 
 func point_to_index(point:Vector2i) -> int:
 	return point.x + point.y*width
