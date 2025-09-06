@@ -14,6 +14,9 @@ enum PlacementDir {
 
 
 func place_3dthing(placement:GridToPlacementsPlacement,at:Vector2) -> void:
+	if placement.scene == null:
+		return
+	
 	var new_node = placement.scene.instantiate()
 	new_node.position = Vector3(at.x,0,at.y)
 	add_child(new_node)

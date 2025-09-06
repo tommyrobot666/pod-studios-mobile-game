@@ -1,0 +1,113 @@
+[gd_scene load_steps=5 format=3 uid="uid://by1fdyjwhdr7k"]
+
+[ext_resource type="Material" uid="uid://ci4aqwvp35gc8" path="res://Assets/Environment Assets/tres files/347433.tres" id="1_8xt3r"]
+[ext_resource type="CylinderMesh" uid="uid://bh4qgp5byehmm" path="res://Scenes/LevelPieces/spikes_spike_mesh.tres" id="1_33iqs"]
+[ext_resource type="Script" uid="uid://d1alajwlcq42f" path="res://Scenes/LevelPieces/spikes.gd" id="1_pxjc2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_33iqs"]
+radius = 1.21563
+
+[node name="Spikes" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+size = Vector3(20, 1, 20)
+material = ExtResource("1_8xt3r")
+
+[node name="Spike" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.892, 0)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.27764, 1.892, 0)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike2"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike3" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1608, 1.892, 0)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike3"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike4" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.892, 5.09201)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike4"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike5" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.27764, 1.892, 5.09201)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike5"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike6" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1608, 1.892, 5.09201)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike6"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike7" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.892, -5.88332)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike7"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike8" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.27764, 1.892, -5.88332)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike8"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
+
+[node name="Spike9" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.1608, 1.892, -5.88332)
+script = ExtResource("1_pxjc2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Spike9"]
+mesh = ExtResource("1_33iqs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Spike9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.23702, 0)
+shape = SubResource("SphereShape3D_33iqs")
