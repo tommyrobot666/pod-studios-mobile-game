@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://dcfphty1wcau4"]
+[gd_scene load_steps=30 format=3 uid="uid://dcfphty1wcau4"]
 
 [ext_resource type="PackedScene" uid="uid://cg4mwi3aiht2j" path="res://Scenes/player.tscn" id="1_ebmjs"]
 [ext_resource type="Material" uid="uid://ci4aqwvp35gc8" path="res://Assets/Environment Assets/tres files/347433.tres" id="2_wowpa"]
@@ -56,32 +56,24 @@ data = PackedVector3Array(0.1138, 1.2628, -0.0502, 0.1739, 0.6314, -0.0735, 0.11
 script = ExtResource("19_iivbl")
 debug_color = Color(1, 0, 0, 1)
 weight = 1.0
-h_adjacent = Array[int]([0, 1, 2, 3])
-v_adjacent = Array[int]([0, 1, 3, 2])
+h_adjacent = Array[int]([0, 1])
+v_adjacent = Array[int]([0, 1])
 metadata/_custom_type_script = "uid://dumyru6h7u4wa"
 
 [sub_resource type="Resource" id="Resource_exi56"]
 script = ExtResource("19_iivbl")
 debug_color = Color(0, 0, 1, 1)
 weight = 1.0
-h_adjacent = Array[int]([])
-v_adjacent = Array[int]([0, 1, 2, 3])
+h_adjacent = Array[int]([0, 1, 2])
+v_adjacent = Array[int]([0, 1, 2])
 metadata/_custom_type_script = "uid://dumyru6h7u4wa"
 
-[sub_resource type="Resource" id="Resource_7t8sx"]
+[sub_resource type="Resource" id="Resource_iivbl"]
 script = ExtResource("19_iivbl")
 debug_color = Color(0, 1, 0, 1)
 weight = 1.0
-h_adjacent = Array[int]([])
-v_adjacent = Array[int]([0, 1, 2, 3])
-metadata/_custom_type_script = "uid://dumyru6h7u4wa"
-
-[sub_resource type="Resource" id="Resource_mg4q0"]
-script = ExtResource("19_iivbl")
-debug_color = Color(0, 1, 1, 1)
-weight = 1.0
-h_adjacent = Array[int]([])
-v_adjacent = Array[int]([0, 1, 2, 3])
+h_adjacent = Array[int]([1, 2])
+v_adjacent = Array[int]([1, 2])
 metadata/_custom_type_script = "uid://dumyru6h7u4wa"
 
 [node name="Game" type="Node3D"]
@@ -3093,7 +3085,7 @@ skeleton = NodePath("../..")
 
 [node name="WaveFunctionCollapse2D2" type="Node" parent="."]
 script = ExtResource("18_iivbl")
-rules = Array[ExtResource("19_iivbl")]([SubResource("Resource_7nbq1"), SubResource("Resource_exi56"), SubResource("Resource_7t8sx"), SubResource("Resource_mg4q0")])
+rules = Array[ExtResource("19_iivbl")]([SubResource("Resource_7nbq1"), SubResource("Resource_exi56"), SubResource("Resource_iivbl")])
 metadata/_custom_type_script = "uid://bvlmc8t7atspx"
 
 [node name="GUI" type="CanvasLayer" parent="."]

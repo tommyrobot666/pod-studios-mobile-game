@@ -13,23 +13,27 @@ var rules_chances:Array[float] = []
 # true means constraints satisfied
 func solve_rule(tile_pos:Vector2i,rule_idx:int) -> bool:
 	var rule = rules[rule_idx]
-	# get_not_any_tiles filters out tiles that could be anything because those don't need to be checked
-	# that's how I thought it would work, but idk why get_not_any_tiles makes it work
-	for tile in get_not_any_tiles(h_get_nearby_tiles(tile_pos)):
-		var has_any_common_states = false
-		for state in tile.possible_states:
-			if rule.h_adjacent.has(state):
-				has_any_common_states = true
-		if not has_any_common_states:
+	if not rule.h_adjacent.is_empty():
+		for tile in h_get_nearby_tiles(tile_pos):
+			var has_any_common_states = false
+			for state in tile.possible_states:
+				if rule.h_adjacent.has(state):
+					has_any_common_states = true
+			if not has_any_common_states:
+				return false
+	else:
+		if get_filled_tiles_obj(h_get_nearby_tiles(tile_pos)).size() > 0:
 			return false
-	# get_not_any_tiles filters out tiles that could be anything because those don't need to be checked
-	# that's how I thought it would work, but idk why get_not_any_tiles makes it work
-	for tile in get_not_any_tiles(v_get_nearby_tiles(tile_pos)):
-		var has_any_common_states = false
-		for state in tile.possible_states:
-			if rule.v_adjacent.has(state):
-				has_any_common_states = true
-		if not has_any_common_states:
+	if not rule.v_adjacent.is_empty():
+		for tile in v_get_nearby_tiles(tile_pos):
+			var has_any_common_states = false
+			for state in tile.possible_states:
+				if rule.v_adjacent.has(state):
+					has_any_common_states = true
+			if not has_any_common_states:
+				return false
+	else:
+		if get_filled_tiles_obj(v_get_nearby_tiles(tile_pos)).size() > 0:
 			return false
 	return true
 
@@ -188,6 +192,15 @@ func clear_tiles(new_size:Vector2i) -> void:
 		for i in range(rules.size()):
 			new_tile.possible_states.append(i)
 		tiles.append(new_tile)
+
+func get_filled_tiles_obj(tiles:Array[Tile]) -> Array[Tile]:
+	var out:Array[Tile]
+	
+	for tile in tiles:
+		if tile.filled:
+			out.append(tile)
+	
+	return out
 
 func get_filled_tiles(tile_poses:Array[Vector2i]) -> Array[Vector2i]:
 	var out:Array[Vector2i]
