@@ -50,14 +50,19 @@ func _physics_process(delta):
 	if jumping and is_on_floor():
 		falling = false
 		jumping = false
+		jump_time = 0
 	
 	# use other gravity for other half of jump
 	if falling:
 		velocity.y -= end_jump_gravity * delta
 	else:
 		# is falling after peak of jump
-		if ((position.y < last_y) and jumping if use_y_position_instead_of_jump_peak_time else jump_time > jump_peak_time):
-			falling = true
+		if use_y_position_instead_of_jump_peak_time:
+			if (position.y < last_y) and jumping:
+				falling = true
+		else:
+			if jump_time > jump_peak_time:
+				falling = true
 		
 		velocity.y -= gravity * delta
 	
