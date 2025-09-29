@@ -14,6 +14,10 @@ config/name="Pod Studio Games Prototype"
 run/main_scene="uid://dcfphty1wcau4"
 config/features=PackedStringArray("4.4", "Mobile")
 
+[autoload]
+
+PlayerControlUi="*res://Scenes/player_control_ui.tscn"
+
 [display]
 
 window/size/viewport_width=1920

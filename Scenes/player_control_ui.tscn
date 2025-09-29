@@ -1,0 +1,80 @@
+[gd_scene load_steps=4 format=3 uid="uid://dahktm4ugqnlb"]
+
+[ext_resource type="Script" uid="uid://ddbw2noooe6hn" path="res://Scripts/joystick.gd" id="1_ewloq"]
+[ext_resource type="Script" uid="uid://b7wlfskcssrys" path="res://Scripts/player_control_ui.gd" id="1_vikgb"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_37nxt"]
+size = Vector2(100, 100)
+
+[node name="PlayerControlUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vikgb")
+
+[node name="JumpButtonLocations" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Jump" type="TouchScreenButton" parent="JumpButtonLocations"]
+position = Vector2(295, 801)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+
+[node name="Jump2" type="TouchScreenButton" parent="JumpButtonLocations"]
+position = Vector2(1699, 818)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+
+[node name="Jump3" type="TouchScreenButton" parent="JumpButtonLocations"]
+position = Vector2(1686, 168)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+
+[node name="WalkJoystickLocations" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Walk" type="TouchScreenButton" parent="WalkJoystickLocations"]
+position = Vector2(167, 858)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+script = ExtResource("1_ewloq")
+
+[node name="Walk2" type="TouchScreenButton" parent="WalkJoystickLocations"]
+position = Vector2(1577, 868)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+script = ExtResource("1_ewloq")
+
+[node name="Walk3" type="TouchScreenButton" parent="WalkJoystickLocations"]
+position = Vector2(1558, 225)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+script = ExtResource("1_ewloq")
+
+[node name="LookJoystickLocations" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Look" type="TouchScreenButton" parent="LookJoystickLocations"]
+position = Vector2(151, 736)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+script = ExtResource("1_ewloq")
+
+[node name="Look2" type="TouchScreenButton" parent="LookJoystickLocations"]
+position = Vector2(1557, 745)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+script = ExtResource("1_ewloq")
+
+[node name="Look3" type="TouchScreenButton" parent="LookJoystickLocations"]
+position = Vector2(1561, 104)
+texture_normal = SubResource("PlaceholderTexture2D_37nxt")
+script = ExtResource("1_ewloq")
+
+[connection signal="pressed" from="JumpButtonLocations/Jump" to="." method="_on_jump_pressed"]
+[connection signal="released" from="JumpButtonLocations/Jump" to="." method="_on_jump_released"]
+[connection signal="pressed" from="JumpButtonLocations/Jump2" to="." method="_on_jump_pressed"]
+[connection signal="released" from="JumpButtonLocations/Jump2" to="." method="_on_jump_released"]
+[connection signal="pressed" from="JumpButtonLocations/Jump3" to="." method="_on_jump_pressed"]
+[connection signal="released" from="JumpButtonLocations/Jump3" to="." method="_on_jump_released"]

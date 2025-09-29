@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cg4mwi3aiht2j"]
+[gd_scene load_steps=7 format=4 uid="uid://cg4mwi3aiht2j"]
 
 [ext_resource type="Script" uid="uid://yw44qpnwqoam" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Script" uid="uid://c04wa1ob4f6nk" path="res://Scripts/camera_3d.gd" id="2_6t5aa"]
@@ -8,6 +8,19 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
 radius = 0.343576
 height = 1.87218
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_vgqql"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 3.85, 11.77, 1e-05),
+"attribute_data": PackedByteArray("AP///wAAAAAAAAAAAP///wAAAAAAAAAAAP///wAAAAAAAAAAAP///wAAAAAAAAAA"),
+"format": 34359742495,
+"index_count": 4,
+"index_data": PackedByteArray("AAABAAIAAwA="),
+"primitive": 4,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AAAAAAAAAAAAAAAAw/VIQOxRPEEAAAAAw/VIQOxRLEEAAAAAZmZ2QAAAAAAAAAAA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AIA=")
+}]
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_cvnsp")
@@ -31,6 +44,7 @@ shape = SubResource("CapsuleShape3D_cvnsp")
 debug_color = Color(0.996078, 0, 0, 0.419608)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("ArrayMesh_vgqql")
 script = ExtResource("4_vgqql")
 height = 11.77
 start_time = 3.14
