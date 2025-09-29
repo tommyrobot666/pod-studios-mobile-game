@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cg4mwi3aiht2j"]
+[gd_scene load_steps=6 format=3 uid="uid://cg4mwi3aiht2j"]
 
 [ext_resource type="Script" uid="uid://yw44qpnwqoam" path="res://Scripts/player.gd" id="1_cvnsp"]
 [ext_resource type="Script" uid="uid://c04wa1ob4f6nk" path="res://Scripts/camera_3d.gd" id="2_6t5aa"]
 [ext_resource type="PackedScene" uid="uid://sjx6rl3wi38i" path="res://Assets/Character Assets/character-female-f.glb" id="3_vgqql"]
+[ext_resource type="Script" uid="uid://dbipio2w5ojn0" path="res://Scripts/player_jump_path.gd" id="4_vgqql"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
 radius = 0.343576
@@ -10,6 +11,11 @@ height = 1.87218
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_cvnsp")
+jump_velocity = 7.497
+gravity = -2.388
+min_jump_time = 0.233
+jump_peak_time = 3.14
+end_jump_gravity = -46.697
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 3.32952e-14, -1.04499e-13, -1.88653e-14, 0.990823, 0.135163, 1.0804e-13, -0.135163, 0.990823, 0, 2.5, 6)
@@ -23,3 +29,15 @@ transform = Transform3D(-2.7, 0, 2.36042e-07, 0, 2.7, 0, -2.36042e-07, 0, -2.7, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.911392, 0)
 shape = SubResource("CapsuleShape3D_cvnsp")
 debug_color = Color(0.996078, 0, 0, 0.419608)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+script = ExtResource("4_vgqql")
+height = 11.77
+start_time = 3.14
+end_time = 0.71
+min_height = 1.685
+start_velocity = 7.49682
+start_gravity = -2.38752
+end_velocity = 33.1549
+end_gravity = -46.6971
+min_jump_time = 0.233439
