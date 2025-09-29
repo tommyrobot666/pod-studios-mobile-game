@@ -15,66 +15,19 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vikgb")
 
-[node name="JumpButtonLocations" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Jump" type="TouchScreenButton" parent="JumpButtonLocations"]
-position = Vector2(295, 801)
+[node name="Jump" type="TouchScreenButton" parent="."]
+position = Vector2(211, 811)
 texture_normal = SubResource("PlaceholderTexture2D_37nxt")
 
-[node name="Jump2" type="TouchScreenButton" parent="JumpButtonLocations"]
-position = Vector2(1699, 818)
-texture_normal = SubResource("PlaceholderTexture2D_37nxt")
-
-[node name="Jump3" type="TouchScreenButton" parent="JumpButtonLocations"]
-position = Vector2(1686, 168)
-texture_normal = SubResource("PlaceholderTexture2D_37nxt")
-
-[node name="WalkJoystickLocations" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Walk" type="TouchScreenButton" parent="WalkJoystickLocations"]
-position = Vector2(167, 858)
+[node name="Walk" type="TouchScreenButton" parent="."]
+position = Vector2(1616, 680)
 texture_normal = SubResource("PlaceholderTexture2D_37nxt")
 script = ExtResource("1_ewloq")
 
-[node name="Walk2" type="TouchScreenButton" parent="WalkJoystickLocations"]
-position = Vector2(1577, 868)
+[node name="Look" type="TouchScreenButton" parent="."]
+position = Vector2(1629, 888)
 texture_normal = SubResource("PlaceholderTexture2D_37nxt")
 script = ExtResource("1_ewloq")
 
-[node name="Walk3" type="TouchScreenButton" parent="WalkJoystickLocations"]
-position = Vector2(1558, 225)
-texture_normal = SubResource("PlaceholderTexture2D_37nxt")
-script = ExtResource("1_ewloq")
-
-[node name="LookJoystickLocations" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Look" type="TouchScreenButton" parent="LookJoystickLocations"]
-position = Vector2(151, 736)
-texture_normal = SubResource("PlaceholderTexture2D_37nxt")
-script = ExtResource("1_ewloq")
-
-[node name="Look2" type="TouchScreenButton" parent="LookJoystickLocations"]
-position = Vector2(1557, 745)
-texture_normal = SubResource("PlaceholderTexture2D_37nxt")
-script = ExtResource("1_ewloq")
-
-[node name="Look3" type="TouchScreenButton" parent="LookJoystickLocations"]
-position = Vector2(1561, 104)
-texture_normal = SubResource("PlaceholderTexture2D_37nxt")
-script = ExtResource("1_ewloq")
-
-[connection signal="pressed" from="JumpButtonLocations/Jump" to="." method="_on_jump_pressed"]
-[connection signal="released" from="JumpButtonLocations/Jump" to="." method="_on_jump_released"]
-[connection signal="pressed" from="JumpButtonLocations/Jump2" to="." method="_on_jump_pressed"]
-[connection signal="released" from="JumpButtonLocations/Jump2" to="." method="_on_jump_released"]
-[connection signal="pressed" from="JumpButtonLocations/Jump3" to="." method="_on_jump_pressed"]
-[connection signal="released" from="JumpButtonLocations/Jump3" to="." method="_on_jump_released"]
+[connection signal="pressed" from="Jump" to="." method="_on_jump_pressed"]
+[connection signal="released" from="Jump" to="." method="_on_jump_released"]

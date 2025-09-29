@@ -52,6 +52,10 @@ func _physics_process(delta):
 		jumping = false
 		jump_time = 0
 	
+	if (not jumping) and (not is_on_floor()):
+		printerr("player floating bug")
+		velocity.y -= 1
+	
 	# use other gravity for other half of jump
 	if falling:
 		velocity.y -= end_jump_gravity * delta
@@ -84,3 +88,4 @@ func _physics_process(delta):
 	last_y = position.y
 	move_and_slide()
 	jump_time += delta
+	PlayerControlUi.input_read()

@@ -21,5 +21,5 @@ func input_read():
 	jump_just_released = false
 
 func _process(_delta: float) -> void:
-	look = $LookJoystickLocations/Look2.current_offset
-	walk = $WalkJoystickLocations/Walk.current_offset
+	look = $Look.current_offset
+	walk = $Walk.current_offset
