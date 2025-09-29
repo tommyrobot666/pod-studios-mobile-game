@@ -6,11 +6,14 @@ extends CharacterBody3D
 @export var min_jump_time:float
 @export var jump_peak_time:float
 @export var end_jump_gravity:float
+## Set falling to true when position.y is less than last frame, not when the time spent jumping is jump_peak_time
+@export var use_y_position_instead_of_jump_peak_time:bool
 
 var jump_time:float
 var stop_jump:bool = false
 var falling:bool = false
-var rising:bool = false
+var jumping:bool = false
+var last_y:float = 0
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED) 
@@ -46,36 +49,33 @@ func _physics_process(delta):
 # fall down -> stopped jumping
 	if falling and is_on_floor():
 		falling = false
-		rising = false
+		jumping = false
 	
 	# use other gravity for other half of jump
 	if falling:
 		velocity.y -= end_jump_gravity * delta
 	else:
 		# is falling after peak of jump
-		if jump_time > jump_peak_time:
+		if ((position.y < last_y) and jumping if use_y_position_instead_of_jump_peak_time else jump_time > jump_peak_time):
 			falling = true
-			rising = false
 		
 		velocity.y -= gravity * delta
 	
 	# for if jump is stopped before min_jump_time
-	if Input.is_action_just_released("jump") and rising:
+	if Input.is_action_just_released("jump") and jumping:
 		stop_jump = true
 	
 	# handle jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = 15.0
-	elif Input.is_action_just_released("jump") and velocity.y > 0.0:
 		velocity.y = jump_velocity 
 		jump_time = 0
-		rising = true
+		jumping = true
 	elif stop_jump and jump_time > min_jump_time:
 		# early stop
 		velocity.y = 0.0
 		stop_jump = false
 		falling = true
-		rising = false
 	
+	last_y = position.y
 	move_and_slide()
 	jump_time += delta
